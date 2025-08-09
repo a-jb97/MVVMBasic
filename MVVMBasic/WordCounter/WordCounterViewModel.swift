@@ -11,20 +11,22 @@ class WordCounterViewModel {
     var inputText: String = "" {
         didSet {
             print("inputText")
-            makeCountString()
+            
+            makeCountText()
         }
     }
     
-    var countString: String = "" {
+    var countText: String = "" {
         didSet {
             print("countString")
+            
             closureText?()
         }
     }
     
     var closureText: (() -> Void)?
     
-    private func makeCountString() {
-        countString = "현재까지 \(inputText.count)글자 작성중"
+    private func makeCountText() {
+        countText = "현재까지 \(inputText.count)글자 작성중"
     }
 }

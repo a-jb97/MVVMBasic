@@ -73,10 +73,10 @@ class WordCounterViewController: UIViewController {
  
 extension WordCounterViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
-        updateCharacterCount()
-        
         viewModel.closureText = {
-            self.countLabel.text = self.viewModel.countString
+            self.countLabel.text = self.viewModel.countText
         }
+        
+        updateCharacterCount()
     }
 }
