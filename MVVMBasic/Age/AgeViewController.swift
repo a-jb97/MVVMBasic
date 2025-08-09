@@ -7,13 +7,9 @@
 
 import UIKit
 
-enum AgeValidationError: Error {
-    case isNotRange
-    case isEmpty
-    case isNotInt
-}
-
 class AgeViewController: UIViewController {
+    let viewModel = AgeViewModel()
+    
     let textField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "나이를 입력해주세요"
@@ -75,46 +71,11 @@ class AgeViewController: UIViewController {
     @objc func resultButtonTapped() {
         view.endEditing(true)
         
-        guard let inputText = textField.text else {
-            print("텍스트를 입력해야 합니다.")
-            
-            return
+        viewModel.closureText = {
+            self.label.text = self.viewModel.resultText
         }
         
-        do {
-            _ = try validateInput(text: inputText)
-            
-            label.text = "\(inputText)살입니다."
-        } catch AgeValidationError.isEmpty {
-            label.text = "텍스트를 입력해 주세요."
-        } catch AgeValidationError.isNotInt {
-            label.text = "숫자를 입력해 주세요."
-        } catch AgeValidationError.isNotRange {
-            label.text = "1 ~ 100 사이의 숫자만 입력해 주세요"
-        } catch {
-            label.text = "에러!"
-        }
-    }
-    
-    private func validateInput(text: String) throws -> Bool {
-        guard !(text.isEmpty) else {
-            print("입력 텍스트가 없음")
-            
-            throw AgeValidationError.isEmpty
-        }
-        
-        guard Int(text) != nil else {
-            print("숫자가 아님")
-            
-            throw AgeValidationError.isNotInt
-        }
-        
-        guard Int(text)! >= 1 && Int(text)! <= 100 else {
-            print("나이 범위에 맞지 않음")
-            
-            throw AgeValidationError.isNotRange
-        }
-        
-        return true
+        viewModel.inputText = ""
+        viewModel.inputText = self.textField.text
     }
 }
