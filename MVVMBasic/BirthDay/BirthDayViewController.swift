@@ -8,15 +8,9 @@
 import UIKit
 import SnapKit
 
-enum BirthDayValidationError: Error {
-    case isEmptyText
-    case isNotNumber
-    case isNotRangeYear
-    case isNotRangeMonth
-    case isNotRangeDay
-}
-
 class BirthDayViewController: UIViewController {
+    let viewModel = BirthDayViewModel()
+    
     let yearTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "년도를 입력해주세요"
@@ -137,105 +131,17 @@ class BirthDayViewController: UIViewController {
     }
     
     @objc func resultButtonTapped() {
-        view.endEditing(true)
-        
-        guard let yearText = yearTextField.text, let monthText = monthTextField.text, let dayText = dayTextField.text else {
-            print("숫자를 입력해야 합니다.")
-            
-            return
+        viewModel.closureText = {
+            self.resultLabel.text = self.viewModel.resultText
         }
         
-        do {
-            _ = try validateInputYear(text: yearText)
-            _ = try validateInputMonth(text: monthText)
-            _ = try validateInputDay(text: dayText)
-            
-            resultLabel.text = "오늘 날짜를 기준으로 D+\(DateFormatter.untilDay(year: yearText, month: monthText, day: dayText))일째 입니다."
-            
-        } catch {
-            switch error {
-                
-            case .isEmptyText:
-                resultLabel.text = "텍스트를 입력해 주세요."
-            
-            case .isNotNumber:
-                resultLabel.text = "숫자만 입력해 주세요."
-                
-            case .isNotRangeYear:
-                resultLabel.text = "연도 형식으로 입력해 주세요."
-                
-            case .isNotRangeMonth:
-                resultLabel.text = "월 형식으로 입력해 주세요."
-                
-            case .isNotRangeDay:
-                resultLabel.text = "일 형식으로 입력해 주세요."
-            }
-        }
-    }
-    
-    private func validateInputYear(text: String) throws(BirthDayValidationError) -> Bool {
-        guard !(text.isEmpty) else {
-            print("입력 텍스트 없음")
-            
-            throw .isEmptyText
-        }
+        viewModel.inputYearText = ""
+        viewModel.inputYearText = self.yearTextField.text
         
-        guard Int(text) != nil else {
-            print("숫자가 아님")
-            
-            throw .isNotNumber
-        }
+        viewModel.inputMonthText = ""
+        viewModel.inputMonthText = self.monthTextField.text
         
-        guard DateFormatter.checkYear(text: text) else {
-            print("연도 형식에 맞지 않음")
-            
-            throw .isNotRangeDay
-        }
-        
-        return true
-    }
-    
-    private func validateInputMonth(text: String) throws(BirthDayValidationError) -> Bool {
-        guard !(text.isEmpty) else {
-            print("입력 텍스트 없음")
-            
-            throw .isEmptyText
-        }
-        
-        guard Int(text) != nil else {
-            print("숫자가 아님")
-            
-            throw .isNotNumber
-        }
-        
-        guard DateFormatter.checkMonth(text: text) else {
-            print("월 형식에 맞지 않음")
-            
-            throw .isNotRangeMonth
-        }
-        
-        return true
-    }
-    
-    private func validateInputDay(text: String) throws(BirthDayValidationError) -> Bool {
-        guard !(text.isEmpty) else {
-            print("입력 텍스트 없음")
-            
-            throw .isEmptyText
-        }
-        
-        guard Int(text) != nil else {
-            print("숫자가 아님")
-            
-            throw .isNotNumber
-        }
-                
-        guard DateFormatter.checkDay(text: text) else {
-            print("일 형식에 맞지 않음")
-            
-            throw .isNotRangeDay
-        }
-        
-        return true
+        viewModel.inputDayText = ""
+        viewModel.inputDayText = self.dayTextField.text
     }
 }
