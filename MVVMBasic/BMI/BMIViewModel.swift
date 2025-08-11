@@ -15,73 +15,91 @@ enum BMIValidationError: String, Error {
 }
 
 class BMIViewModel {
-    var inputHeightText: String? = "" {
-        didSet {
-            print("inputHeightText")
-            
-            validateText()
+    var inputHeightText = Observable("")
+    
+//    var inputHeightText: String? = "" {
+//        didSet {
+//            print("inputHeightText")
+//            
+//            validateText()
+//        }
+//    }
+    
+    var inputWeightText = Observable("")
+    
+//    var inputWeightText: String? = "" {
+//        didSet {
+//            print("inputWeightText")
+//            
+//            validateText()
+//        }
+//    }
+    
+    init() {
+        print("BMIViewModel init")
+        
+        inputHeightText.runAction { _ in
+            self.validateText()
+        }
+        
+        inputWeightText.runAction { _ in
+            self.validateText()
         }
     }
     
-    var inputWeightText: String? = "" {
-        didSet {
-            print("inputWeightText")
-            
-            validateText()
-        }
-    }
+    var resultText = Observable("")
     
-    var resultText: String = "" {
-        didSet {
-            print("resultText")
-            
-            closureText?()
-        }
-    }
+//    var resultText: String = "" {
+//        didSet {
+//            print("resultText")
+//            
+//            closureText?()
+//        }
+//    }
     
-    var closureText: (() -> Void)?
+//    var closureText: (() -> Void)?
     
     var alertPresent: ((String) -> Void)?
     
     private func validateText() {
-        guard let heightText = inputHeightText, let weightText = inputWeightText else {
-            print("숫자를 입력해야 합니다.")
-            
-            return
-        }
+//        guard let heightText = inputHeightText, let weightText = inputWeightText else {
+//            print("숫자를 입력해야 합니다.")
+//            
+//            return
+//        }
         
         do {
-            _ = try validateInputHeight(text: heightText)
-            _ = try validateInputWeight(text: weightText)
+            _ = try validateInputHeight(text: inputHeightText.value)
+            _ = try validateInputWeight(text: inputWeightText.value)
             
-            resultText = "당신의 BMI는 \(calculateBMI(height: Double(heightText)!, weight: Double(weightText)!))입니다."
+            resultText.value = "당신의 BMI는 \(calculateBMI(height: Double(inputHeightText.value)!, weight: Double(inputWeightText.value)!))입니다."
             
         } catch {
             switch error {
                 
             case .isEmptyText:
-                resultText = BMIValidationError.isEmptyText.rawValue
+                resultText.value = BMIValidationError.isEmptyText.rawValue
                 
                 alertPresent?(BMIValidationError.isEmptyText.rawValue)
                 
                 // present(UIAlertController.configureAlert(message: "텍스트를 입력해 주세요!"), animated: true, completion: nil)
                 
             case .isNotDouble:
-                resultText = BMIValidationError.isNotDouble.rawValue
+                resultText.value = BMIValidationError.isNotDouble.rawValue
                 
                 alertPresent?(BMIValidationError.isNotDouble.rawValue)
                 
                 // present(UIAlertController.configureAlert(message: "숫자만 입력해 주세요!"), animated: true, completion: nil)
                 
             case .isNotRangeHeight:
-                resultText = BMIValidationError.isNotRangeHeight.rawValue
+                resultText.value = BMIValidationError.isNotRangeHeight.rawValue
                 
                 alertPresent?(BMIValidationError.isNotRangeHeight.rawValue)
                 
                 // present(UIAlertController.configureAlert(message: "1.4m ~ 2.3m 사이의 키만 입력해 주세요!"), animated: true, completion: nil)
                 
             case .isNotRangeWeight:
-                resultText = BMIValidationError.isNotRangeWeight.rawValue
+                resultText.value = BMIValidationError.isNotRangeWeight.rawValue
                 
                 alertPresent?(BMIValidationError.isNotRangeWeight.rawValue)
                 

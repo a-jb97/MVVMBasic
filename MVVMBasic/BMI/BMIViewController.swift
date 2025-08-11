@@ -41,9 +41,13 @@ class BMIViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         
-        viewModel.closureText = {
-            self.resultLabel.text = self.viewModel.resultText
+        viewModel.resultText.runAction { text in
+            self.resultLabel.text = text
         }
+        
+//        viewModel.closureText = {
+//            self.resultLabel.text = self.viewModel.resultText
+//        }
         
         viewModel.alertPresent = { alertMessage in
             self.present(UIAlertController.configureAlert(message: alertMessage), animated: true, completion: nil)
@@ -92,10 +96,13 @@ class BMIViewController: UIViewController {
     @objc func resultButtonTapped() {
         view.endEditing(true)
         
-        viewModel.inputHeightText = "1.7"
-        viewModel.inputWeightText = "72"
+//        viewModel.inputHeightText = ""
+//        viewModel.inputWeightText = ""
         
-        viewModel.inputHeightText = self.heightTextField.text
-        viewModel.inputWeightText = self.weightTextField.text
+        viewModel.inputHeightText.value = heightTextField.text!
+        viewModel.inputWeightText.value = weightTextField.text!
+        
+//        viewModel.inputHeightText = self.heightTextField.text
+//        viewModel.inputWeightText = self.weightTextField.text
     }
 }
