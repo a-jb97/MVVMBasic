@@ -11,6 +11,7 @@ class Observable<T> {
     var value: T {
         didSet {
             print("value didSet")
+            action?(value)
         }
     }
     

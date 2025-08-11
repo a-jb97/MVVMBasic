@@ -32,8 +32,13 @@ class AgeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureHierarchy()
         configureLayout()
+        
+        viewModel.resultText.runAction { text in
+            self.label.text = text
+        }
         
         resultButton.addTarget(self, action: #selector(resultButtonTapped), for: .touchUpInside)
     }
@@ -71,11 +76,6 @@ class AgeViewController: UIViewController {
     @objc func resultButtonTapped() {
         view.endEditing(true)
         
-        viewModel.closureText = {
-            self.label.text = self.viewModel.resultText
-        }
-        
-        viewModel.inputText = ""
-        viewModel.inputText = self.textField.text
+        viewModel.inputText.value = textField.text!
     }
 }

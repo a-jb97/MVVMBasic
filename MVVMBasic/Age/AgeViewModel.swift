@@ -14,43 +14,38 @@ enum AgeValidationError: Error {
 }
 
 class AgeViewModel {
-    var inputText: String? = "" {
-        didSet {
-            print("inputText")
-            
-            validateText()
+    var inputText = Observable("")
+    
+    init() {
+        print("AgeViewModel init")
+        
+        inputText.runAction { _ in
+            self.validateText()
         }
     }
     
-    var resultText: String = "" {
-        didSet {
-            print("resultText")
-            
-            closureText?()
-        }
-    }
-    
-    var closureText: (() -> Void)?
+    var resultText = Observable("")
     
     private func validateText() {
-        guard let inputText = inputText else {
-            print("텍스트를 입력해야 합니다.")
-            
-            return
-        }
+    // 이미 value에서 옵셔널인지 판단하기 때문에 불필요
+//        guard let inputText = inputText.value else {
+//            print("텍스트를 입력해야 합니다.")
+//            
+//            return
+//        }
         
         do {
-            _ = try validateInput(text: inputText)
+            _ = try validateInput(text: inputText.value)
             
-            resultText = "\(inputText)살입니다."
+            resultText.value = "\(inputText.value)살입니다."
         } catch AgeValidationError.isEmpty {
-            resultText = "텍스트를 입력해 주세요."
+            resultText.value = "텍스트를 입력해 주세요."
         } catch AgeValidationError.isNotInt {
-            resultText = "숫자를 입력해 주세요."
+            resultText.value = "숫자를 입력해 주세요."
         } catch AgeValidationError.isNotRange {
-            resultText = "1 ~ 100 사이의 숫자만 입력해 주세요"
+            resultText.value = "1 ~ 100 사이의 숫자만 입력해 주세요"
         } catch {
-            resultText = "에러!"
+            resultText.value = "에러!"
         }
     }
     
