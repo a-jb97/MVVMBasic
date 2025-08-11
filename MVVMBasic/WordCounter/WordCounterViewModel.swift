@@ -8,25 +8,38 @@
 import Foundation
 
 class WordCounterViewModel {
-    var inputText: String = "" {
-        didSet {
-            print("inputText")
-            
-            makeCountText()
+    var inputText = Observable("")
+    
+    init() {
+        print("WordCounterViewModel init")
+        
+        inputText.runAction { _ in
+            self.makeCountText()
         }
     }
     
-    var countText: String = "" {
-        didSet {
-            print("countString")
-            
-            closureText?()
-        }
-    }
+//    var inputText: String = "" {
+//        didSet {
+//            print("inputText")
+//            
+//            makeCountText()
+//        }
+//    }
     
-    var closureText: (() -> Void)?
+//    var countText: String = "" {
+//        didSet {
+//            print("countString")
+//            
+//            closureText?()
+//        }
+//    }
+    
+    var countText = Observable("")
+    
+    // Observable 사용으로 이제 사용 X
+    // var closureText: (() -> Void)?
     
     private func makeCountText() {
-        countText = "현재까지 \(inputText.count)글자 작성중"
+        countText.value = "현재까지 \(inputText.value.count)글자 작성중"
     }
 }
