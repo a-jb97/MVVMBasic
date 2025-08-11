@@ -60,8 +60,13 @@ class BirthDayViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureHierarchy()
         configureLayout()
+        
+        viewModel.resultText.runAction { text in
+            self.resultLabel.text = text
+        }
         
         resultButton.addTarget(self, action: #selector(resultButtonTapped), for: .touchUpInside)
     }
@@ -131,17 +136,21 @@ class BirthDayViewController: UIViewController {
     }
     
     @objc func resultButtonTapped() {
-        viewModel.closureText = {
-            self.resultLabel.text = self.viewModel.resultText
-        }
+        viewModel.inputYearText.value = yearTextField.text!
+        viewModel.inputMonthText.value = monthTextField.text!
+        viewModel.inputDayText.value = dayTextField.text!
         
-        viewModel.inputYearText = ""
-        viewModel.inputYearText = self.yearTextField.text
+//        viewModel.closureText = {
+//            self.resultLabel.text = self.viewModel.resultText
+//        }
         
-        viewModel.inputMonthText = ""
-        viewModel.inputMonthText = self.monthTextField.text
-        
-        viewModel.inputDayText = ""
-        viewModel.inputDayText = self.dayTextField.text
+//        viewModel.inputYearText = ""
+//        viewModel.inputYearText = self.yearTextField.text
+//        
+//        viewModel.inputMonthText = ""
+//        viewModel.inputMonthText = self.monthTextField.text
+//        
+//        viewModel.inputDayText = ""
+//        viewModel.inputDayText = self.dayTextField.text
     }
 }

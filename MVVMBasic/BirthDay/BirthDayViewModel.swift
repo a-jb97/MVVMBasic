@@ -16,71 +16,95 @@ enum BirthDayValidationError: Error {
 }
 
 class BirthDayViewModel {
-    var inputYearText: String? = "" {
-        didSet {
-            print("inputYearText")
-            
-            validateText()
-        }
-    }
+    var inputYearText = Observable("")
     
-    var inputMonthText: String? = "" {
-        didSet {
-            print("inputMonthText")
-            
-            validateText()
-        }
-    }
+//    var inputYearText: String? = "" {
+//        didSet {
+//            print("inputYearText")
+//            
+//            validateText()
+//        }
+//    }
     
-    var inputDayText: String? = "" {
-        didSet {
-            print("inputDayText")
-            
-            validateText()
-        }
-    }
+    var inputMonthText = Observable("")
     
-    var resultText: String = "" {
-        didSet {
-            print("resultText")
-            
-            closureText?()
-        }
-    }
+//    var inputMonthText: String? = "" {
+//        didSet {
+//            print("inputMonthText")
+//            
+//            validateText()
+//        }
+//    }
     
-    var closureText: (() -> Void)?
+    var inputDayText = Observable("")
     
-    private func validateText() {
-        guard let yearText = inputYearText, let monthText = inputMonthText, let dayText = inputDayText else {
-            print("숫자를 입력해야 합니다.")
-            
-            return
+//    var inputDayText: String? = "" {
+//        didSet {
+//            print("inputDayText")
+//            
+//            validateText()
+//        }
+//    }
+    
+    init() {
+        print("BirthDayViewModel init")
+        
+        inputYearText.runAction { _ in
+            self.validateText()
         }
         
+        inputMonthText.runAction { _ in
+            self.validateText()
+        }
+        
+        inputDayText.runAction { _ in
+            self.validateText()
+        }
+    }
+    
+    var resultText = Observable("")
+    
+//    var resultText: String = "" {
+//        didSet {
+//            print("resultText")
+//            
+//            closureText?()
+//        }
+//    }
+    
+//    var closureText: (() -> Void)?
+    
+    private func validateText() {
+//        guard let yearText = inputYearText, let monthText = inputMonthText, let dayText = inputDayText else {
+//            print("숫자를 입력해야 합니다.")
+//            
+//            return
+//        }
+        
         do {
-            _ = try validateInputYear(text: yearText)
-            _ = try validateInputMonth(text: monthText)
-            _ = try validateInputDay(text: dayText)
+            _ = try validateInputYear(text: inputYearText.value)
+            _ = try validateInputMonth(text: inputMonthText.value)
+            _ = try validateInputDay(text: inputDayText.value)
             
-            resultText = "오늘 날짜를 기준으로 D+\(DateFormatter.untilDay(year: yearText, month: monthText, day: dayText))일째 입니다."
+            resultText.value = "오늘 날짜를 기준으로 D+\(DateFormatter.untilDay(year: inputYearText.value, month: inputMonthText.value, day: inputDayText.value))일째 입니다."
             
         } catch {
             switch error {
                 
             case .isEmptyText:
-                resultText = "텍스트를 입력해 주세요."
+                resultText.value = "텍스트를 입력해 주세요."
             
             case .isNotNumber:
-                resultText = "숫자만 입력해 주세요."
+                resultText.value = "숫자만 입력해 주세요."
                 
             case .isNotRangeYear:
-                resultText = "연도 형식으로 입력해 주세요."
+                resultText.value = "연도 형식으로 입력해 주세요."
                 
             case .isNotRangeMonth:
-                resultText = "월 형식으로 입력해 주세요."
+                resultText.value = "월 형식으로 입력해 주세요."
                 
             case .isNotRangeDay:
-                resultText = "일 형식으로 입력해 주세요."
+                resultText.value = "일 형식으로 입력해 주세요."
             }
         }
     }
