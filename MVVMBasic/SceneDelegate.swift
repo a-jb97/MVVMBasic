@@ -28,8 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         wordCounterVC.tabBarItem = UITabBarItem(title: "글자 수 세기", image: UIImage(systemName: "text.word.spacing"), tag: 3)
         let currencyVC = CurrencyViewController()
         currencyVC.tabBarItem = UITabBarItem(title: "환율 계산", image: UIImage(systemName: "bitcoinsign.circle.fill"), tag: 4)
+        let mapVC = MapViewController()
+        mapVC.tabBarItem = UITabBarItem(title: "식당 지도", image: UIImage(systemName: "map.fill"), tag: 5)
         
-        tabBarController.viewControllers = [ageVC, bmiVC, birthDayVC, wordCounterVC, currencyVC]
+        tabBarController.viewControllers = [ageVC, bmiVC, birthDayVC, wordCounterVC, currencyVC, mapVC]
         tabBarController.tabBar.tintColor = .systemBlue
         tabBarController.tabBar.unselectedItemTintColor = .systemGray
         
